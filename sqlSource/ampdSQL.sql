@@ -103,13 +103,11 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `mathLearningDB`.`SURVEY_RESPONSE`
 -- -----------------------------------------------------
-CREATE TABLE IF
-NOT EXISTS `mathLearningDB`.`SURVEY_RESPONSE` (
+
+DROP TABLE IF EXISTS `mathLearningDB`.`SURVEY_RESPONSE`;
+CREATE TABLE `mathLearningDB`.`SURVEY_RESPONSE` (
   `RecordedDate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `ResponseId` INT NOT NULL,
-  `RecipientLastName` VARCHAR(45) NOT NULL,
-  `RecipientFirstName` VARCHAR(45) NOT NULL,
-  `RecipientEmail` VARCHAR(255) NOT NULL,
+  `ResponseId` VARCHAR(12) NULL,
   `Q1_1` INT NULL,
   `Q1_2` INT NULL,
   `Q1_3` INT NULL,
@@ -118,9 +116,9 @@ NOT EXISTS `mathLearningDB`.`SURVEY_RESPONSE` (
   `ClassID` INT NOT NULL,
   `StartTime` VARCHAR(45) NULL,
   `EndTime` VARCHAR(45) NULL,
-  `ObsID` VARCHAR(12) NOT NULL,
-  PRIMARY KEY (`ResponseId`, `RecordedDate`, `ClassID`))
-ENGINE = InnoDB;
+  `ObsID` VARCHAR(11) NOT NULL,
+  PRIMARY KEY (`RecordedDate`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- -----------------------------------------------------
 -- Table `mathLearningDB`.`CLASS_RESPONSE`

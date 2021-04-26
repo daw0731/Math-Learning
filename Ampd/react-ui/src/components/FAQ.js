@@ -36,10 +36,12 @@ class FAQ extends Component{
                   real-time feedback to instructors via unintrusive web tools.</p>
                 <h2 class="q">Who is AMP'D?</h2>
                   <p class="ans">AMPD is a collaboration project coordinated by the <a href="https://www.bobcatsoftwarefactory.com/">
-                  MSU Software Factory</a> AMPD was created and overseen by Dr. Derek Williams, an educational researcher
+                  MSU Software Factory</a>. AMPD was created and overseen by Dr. Derek Williams, an educational researcher
                   at MSU and mathematics instructor with over 12 years of experience in teaching. The design and implementation of the web
-                  application was carried out by three MSU undergraduate students: Kyle Rathman (Backend Engineer), Kendall Black (Frontend
+                  application was carried out by three MSU undergraduate students in 2020: Kyle Rathman (Backend Engineer), Kendall Black (Frontend
                   Engineer), and Dylan Lynn (Project Architect).</p>
+                  <p class="ans">The project was then continued by Zachary Schallenberger & Tristan Stevens in 2021. Improvements included new responsive design
+                  & mobile functionality, text-message notifications, changes to the backend, and better source control/documentation.</p>
                 <h2 class="q">How can I sign up?</h2>
                   <p class="ans">If you are a student enrolled in a class using AMPD, click the menu bar in the upper right
                   then click "Register" and enter the class code provided by your instructor. If you are an educator that would

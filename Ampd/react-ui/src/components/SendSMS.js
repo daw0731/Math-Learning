@@ -5,7 +5,8 @@ exports.SendSMS = function () {
   var schedule = require('node-schedule');
   var inClassNotificationSchedules = "./SchedulingFunctions";
   var concatNum = ("+1" + jwt_decode(localStorage.usertoken).phonenumber);
-  var surveyLink = "https://ampdmath.com/survey";
+  //var surveyLink = "https://ampdmath.com/survey";
+  var surveyLink = "http://localhost:3000/survey";
     fetch('/api/messages', {
       method: 'POST',
       headers: {

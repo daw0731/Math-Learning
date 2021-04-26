@@ -107,8 +107,8 @@ class CreateClass extends Component {
         else*/
             create_class(class_data)
             this.toggle()
-            this.scheduleNotifications(class_data.start_time, class_data.days, class_data.class_name,
-                this.state.startDate, this.state.endDate)
+            //this.scheduleNotifications(class_data.start_time, class_data.days, class_data.class_name,
+            //    this.state.startDate, this.state.endDate)
         this.setState({
             class_name: '',
             section_number: '',

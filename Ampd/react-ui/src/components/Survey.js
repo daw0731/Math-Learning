@@ -234,8 +234,8 @@ class Survey extends Component {
                         </div>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={this.submit}>Submit survey! :)</Button>
-                        <Button color="danger" onClick={this.toggle}>Click here or anywhere outside survey to dismiss :(</Button>
+                        <Button color="primary" onClick={this.submit}>Submit</Button>
+                        <Button color="danger" onClick={this.toggle}>Cancel</Button>
                     </ModalFooter>
                 </Modal>
             </div>

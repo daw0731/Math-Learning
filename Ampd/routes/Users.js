@@ -306,7 +306,7 @@ async function getClassTimes(cid) {
 async function getDatatable() {
 	var foundData = ""
 	await Survey.findAll({
-		order: [['Timestamp', 'ASC']]
+		order: [['RecordedDate', 'ASC']]
 	})
 	.then(data => {
 		//console.log("Raw Datatable Data: "+data)
@@ -387,7 +387,7 @@ users.get('/profile/classes', (req, res) => {
 })
 users.get('/dataTables', (req, res) => {
     Survey.findAll({
-        attributes: ['UserID','Engagement', 'Interest', 'Enjoyment', 'Challenge', 'Skill']
+        attributes: ['RecordedDate','Q1_1', 'Q1_2', 'Q1_3', 'Q1_4', 'Q1_5', 'ClassID', 'StartTime', 'EndTime', 'ObsID']
     })
         .then(responses => {
             res.send(JSON.stringify(responses))
@@ -563,9 +563,9 @@ users.post('/survey', (req, res) => {
   var obsIDRand = Math.random().toString(36).substring(2);
     const answers = {
         ResponseId: req.body.userid,
-        RecipientLastName: req.body.RecipientLastName,
-        RecipientFirstName: req.body.RecipientFirstName,
-        RecipientEmail: req.body.RecipientEmail,
+        //RecipientLastName: req.body.RecipientLastName,
+        //RecipientFirstName: req.body.RecipientFirstName,
+        //RecipientEmail: req.body.RecipientEmail,
 	ObsID: obsIDRand,
         ClassID: req.body.classid,
         StartTime: req.body.startTime,
@@ -574,8 +574,7 @@ users.post('/survey', (req, res) => {
 	Q1_2: req.body.enjoyment,
 	Q1_3: req.body.interest,
 	Q1_4: req.body.challenge,
-	Q1_5: req.body.skill,
-
+	Q1_5: req.body.skill
     }
     Survey.create(answers)
     res.send("here")
