@@ -1,6 +1,6 @@
 const Sequelize = require("sequelize")
 const db = {}
-const sequelize = new Sequelize("test", "root", "newpassword", {
+const sequelize = new Sequelize("BackupDB", "root", "newpassword", {
     host : 'localhost',
     dialect: 'mysql',
     operatersAliases: false,

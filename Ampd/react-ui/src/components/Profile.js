@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import jwt_decode from 'jwt-decode'
-import { join_class, create_class } from "./UserFunctions"
+import { join_class, create_class, getEnrolledIn, classList, beginClass, getNumberList } from "./UserFunctions"
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter,Table,UncontrolledAlert } from 'reactstrap';
 import axios from 'axios';
 import subscribePush from "./Subscription"
@@ -11,6 +11,7 @@ import { DateTime } from "luxon"
 import "./css/Profile.css"
 
 var msg = require('./SendSMS');
+var schedule = require('node-schedule');
 // var schedule = require('node-schedule');
 // var rule = new schedule.RecurrenceRule();
 class Profile extends Component {
@@ -49,8 +50,11 @@ class Profile extends Component {
     joinClass() {
         const data = {
             userid: this.state.userid,
-            class_code: this.state.class_code
+            class_code: this.state.class_code,
+            phonenumber: this.state.phonenumber
         }
+        console.log("Data passed = " + data)
+        console.log("Phone number = " + this.state.phonenumber)
         join_class(data)
 	this.getEnrolledClasses()
 	setTimeout(()=>{window.location.reload()}, 500)
@@ -116,7 +120,6 @@ class Profile extends Component {
 
 
     checkTime(classStartTime, classEndTime, daysHeld,classCode) {
-
         daysHeld = daysHeld.split('')
         let dayOfWeek = []
         daysHeld.forEach(day => {
@@ -179,6 +182,57 @@ class Profile extends Component {
         }
     }
 
+    startClass(classStartTime, classEndTime, classCode){
+      //console.log("Starting Class: " + classCode);
+      var textSchedule;
+      var startTime = classStartTime;
+      var endTime = classEndTime;
+      var startSplit = startTime.split(':');
+      var endSplit = endTime.split(':');
+      var startMins = parseInt(startSplit[0]) * 60 + parseInt(startSplit[1]);
+      var endMins = parseInt(endSplit[0]) * 60 + parseInt(endSplit[1]);
+      var midpoint = Math.floor((endMins - startMins))
+      var randomizer = [];
+      var firstSendMinute;
+      const promise = new Promise((resolve, reject) => {
+        resolve(getNumberList(classCode)
+          .then(res => {
+            //resArray contains an array of phonenumbers for everyone present in the class that day
+            var resArray = res.toString().split(',');
+            var assignedTime;
+            var timeSlot = [];
+            console.log("Phone Number List: " + res);
+            console.log("Class Start Time: " + classStartTime);
+            console.log("Class End Time: " + classEndTime);
+            resArray.forEach((phonenumber, i) => {
+              randomizer.push(Math.floor(Math.random() * (midpoint)));
+              //firstSendMinute is the randomly assigned time that each student of a class will receive
+              firstSendMinute = Math.floor(parseInt(startSplit[1]) + randomizer[i]) + 5;
+              if (firstSendMinute >= 60) {
+                  firstSendMinute = firstSendMinute - 60;
+              }
+              firstSendMinute = 43;
+              //this is a for each function which will run x amount of times (x = #of phonenumbers in class)
+              console.log("Phonenumber #" + i + ": " + phonenumber);
+              console.log("Assigned Time #" + i + ": " + firstSendMinute);
+              timeSlot.push(firstSendMinute)
+              textSchedule = schedule.scheduleJob(timeSlot[i].toString() + ' * * * *', function (student) {
+                msg.SendSMS(phonenumber);
+              });
+            });
+            return JSON.stringify(res);
+          }));
+      });
+      const scheduleData = {
+          userid:this.state.userid,
+          startTime:classStartTime,
+          endTime:classEndTime,
+          classCode:classCode,
+      }
+      inClassNotificationSchedules(scheduleData)
+      alert("Class started! Please leave this page open; it will send text messages to students throughout the class period");
+    }
+
 
 	renderTableData() {
         return this.state.classes.map((classes, index) => {
@@ -190,7 +244,6 @@ class Profile extends Component {
                     <td>{StartTime}</td>
                     <td>{EndTime}</td>
                     <td>{Days}</td>
-		    <td><Button onClick={() => this.checkTime(StartTime, EndTime, Days,ClassID)}>Attendance</Button></td>
                 </tr>
             )
 	    }
@@ -202,6 +255,7 @@ class Profile extends Component {
 		    <td>{StartTime}</td>
 		    <td>{EndTime}</td>
 		    <td>{Days}</td>
+        <td><Button onClick={() => this.startClass(StartTime, EndTime, ClassID)}>Start Class</Button></td>
 		</tr>
 	    )
             }
@@ -379,10 +433,10 @@ class Profile extends Component {
 		{this.state.admin_level === '3' ?
 		//Changed to test texts
 		//<button onClick={() => subscribePush(this.state.userid)}> Subscribe </button>
+    //<a href="/survey"> SURVEY </a>
+    //            <button onClick={() => unsubscribePush()}> Unsubscribe </button>
 		<div>
-		<button onClick={() => msg.SendSMS()}> Send Text </button>
-    <a href="/survey"> SURVEY </a>
-                <button onClick={() => unsubscribePush()}> Unsubscribe </button>
+
 		<div>
                     <div id="subscriptionStatusWarn" style={{ display:'none',width:'60%', margin:'auto' }}>
                         <UncontrolledAlert  color="warning">
@@ -436,7 +490,6 @@ class Profile extends Component {
 					<th>Start Time</th>
 					<th>End Time</th>
 					<th>Class Days</th>
-					<th>Attendance</th>
 					</React.Fragment>
 					:
 					<React.Fragment>
@@ -445,6 +498,7 @@ class Profile extends Component {
 					<th>Start Time</th>
 					<th>End Time</th>
 					<th>Class Days</th>
+          <th>Start Class</th>
 					</React.Fragment>
 				}
 			    </tr>
